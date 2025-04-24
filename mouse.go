@@ -60,6 +60,10 @@ type Mouse interface {
 	// Wheel will simulate a wheel movement.
 	Wheel(horizontal bool, delta int32) error
 
+	// WheelHighRes will simulate a high-resolution wheel movement.
+	// 120 high-resolution steps correspond to one ordinary wheel movement.
+	WheelHighRes(horizontal bool, delta int32) error
+
 	// FetchSysPath will return the syspath to the device file.
 	FetchSyspath() (string, error)
 
@@ -208,6 +212,15 @@ func (vRel vMouse) Wheel(horizontal bool, delta int32) error {
 	return sendRelEvent(vRel.deviceFile, uint16(w), delta)
 }
 
+// WheelHighRes will simulate a wheel movement with high resolution.
+func (vRel vMouse) WheelHighRes(horizontal bool, delta int32) error {
+	w := relWheelHiRes
+	if horizontal {
+		w = relHWheelHiRes
+	}
+	return sendRelEvent(vRel.deviceFile, uint16(w), delta)
+}
+
 // Close closes the device and releases the device.
 func (vRel vMouse) Close() error {
 	return closeDevice(vRel.deviceFile)
@@ -241,7 +254,7 @@ func createMouse(path string, name []byte) (fd *os.File, err error) {
 	}
 
 	// register relative events
-	for _, event := range []int{relX, relY, relWheel, relHWheel} {
+	for _, event := range []int{relX, relY, relWheel, relHWheel, relWheelHiRes, relHWheelHiRes} {
 		err = ioctl(deviceFile, uiSetRelBit, uintptr(event))
 		if err != nil {
 			deviceFile.Close()

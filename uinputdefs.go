@@ -21,15 +21,17 @@ const (
 
 // input event codes as specified in input-event-codes.h
 const (
-	evSyn     = 0x00
-	evKey     = 0x01
-	evRel     = 0x02
-	evAbs     = 0x03
-	relX      = 0x0
-	relY      = 0x1
-	relHWheel = 0x6
-	relWheel  = 0x8
-	relDial   = 0x7
+	evSyn          = 0x00
+	evKey          = 0x01
+	evRel          = 0x02
+	evAbs          = 0x03
+	relX           = 0x0
+	relY           = 0x1
+	relHWheel      = 0x6
+	relWheel       = 0x8
+	relDial        = 0x7
+	relWheelHiRes  = 0x0b
+	relHWheelHiRes = 0x0c
 
 	absX     = 0x00
 	absY     = 0x01

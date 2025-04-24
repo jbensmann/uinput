@@ -117,6 +117,29 @@ func TestVMouse_Wheel(t *testing.T) {
 	}
 }
 
+func TestVMouse_WheelHighRes(t *testing.T) {
+	relDev, err := CreateMouse("/dev/uinput", []byte("Test Basic Mouse"))
+	if err != nil {
+		t.Fatalf("Failed to create the virtual mouse. Last error was: %s\n", err)
+	}
+	defer func(relDev Mouse) {
+		err := relDev.Close()
+		if err != nil {
+			t.Fatalf("failed to close virtual mouse: %v", err)
+		}
+	}(relDev)
+
+	err = relDev.WheelHighRes(false, 42)
+	if err != nil {
+		t.Fatalf("Failed to perform high-resolution wheel movement. Last error was: %s\n", err)
+	}
+
+	err = relDev.WheelHighRes(true, -23)
+	if err != nil {
+		t.Fatalf("Failed to perform horizontal high-resolution wheel movement. Last error was: %s\n", err)
+	}
+}
+
 func TestMouseClicks(t *testing.T) {
 	relDev, err := CreateMouse("/dev/uinput", []byte("Test Basic Mouse"))
 	if err != nil {
@@ -419,6 +442,19 @@ func TestMouseWheelFailsIfDeviceIsClosed(t *testing.T) {
 	relDev.Close()
 
 	err = relDev.Wheel(false, 1)
+	if err == nil {
+		t.Fatalf("Expected error due to closed device, but no error was returned.")
+	}
+}
+
+func TestMouseWheelHighResFailsIfDeviceIsClosed(t *testing.T) {
+	relDev, err := CreateMouse("/dev/uinput", []byte("Test Basic Mouse"))
+	if err != nil {
+		t.Fatalf("Failed to create the virtual mouse. Last error was: %s\n", err)
+	}
+	relDev.Close()
+
+	err = relDev.WheelHighRes(false, 1)
 	if err == nil {
 		t.Fatalf("Expected error due to closed device, but no error was returned.")
 	}
