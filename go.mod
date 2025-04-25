@@ -1,3 +1,3 @@
-module github.com/bendahl/uinput
+module github.com/jbensmann/uinput
 
 go 1.13
